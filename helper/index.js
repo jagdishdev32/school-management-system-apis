@@ -1,5 +1,9 @@
-const { getWhereSectionOrClassQuerySnip } = require("./querys.helpers");
+const {
+  getWhereSectionOrClassQuerySnip,
+  getWhereSubjectOrSectionOrClassQuerySnip,
+} = require("./querys.helpers");
 
 module.exports = {
   getWhereSectionOrClassQuerySnip,
+  getWhereSubjectOrSectionOrClassQuerySnip,
 };

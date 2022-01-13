@@ -1,7 +1,10 @@
 const router = require("express").Router();
 const db = require("../db");
 const { checkValidClass, checkValidSection } = require("../handlers");
-const { getWhereSectionOrClassQuerySnip } = require("../helper");
+const {
+  getWhereSectionOrClassQuerySnip,
+  getWhereSubjectOrSectionOrClassQuerySnip,
+} = require("../helper");
 
 // METH     GET /students
 // DESC     Get all students with class and section details
@@ -78,6 +81,7 @@ router.get("/full", async (req, res) => {
   try {
     const section = req.query.section;
     const c = +req.query.class;
+    const subject = req.query.subject;
 
     let validClass = checkValidClass(c);
     let validSection = checkValidSection(section);
@@ -85,11 +89,17 @@ router.get("/full", async (req, res) => {
     if (c && !validClass) {
       throw new Error("Class is not valid (class range is 1-10)");
     }
+
     if (section && !validSection) {
       throw new Error("Section is not valid (sections range is A-D)");
     }
 
-    let whereQuery = getWhereSectionOrClassQuerySnip(c, section);
+    // let whereQuery = getWhereSectionOrClassQuerySnip(c, section);
+    let whereQuery = getWhereSubjectOrSectionOrClassQuerySnip(
+      subject,
+      c,
+      section
+    );
 
     let query = `
         SELECT 
