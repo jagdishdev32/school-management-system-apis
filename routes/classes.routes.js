@@ -1,15 +1,42 @@
 const router = require("express").Router();
 const db = require("../db");
 const {
-  getAllStudentsOfPerticularClassAndSection,
   getOnlyStudentNamesListOfPerticularClassAndSection,
+  checkValidClass,
+  checkValidSection,
 } = require("../handlers");
+const {
+  getWhereSectionOrClassQuerySnip,
+  getWhereTeacherOrSectionOrClassQuerySnip,
+  getWhereAllSearchQuerySnip,
+} = require("../helper");
 
 // METH     GET /classes
 // DESC     Get all classes with subjects and teachers details
 //          sorted by class then section
 // ACCESS   Public
 router.get("/", (req, res) => {
+  const section = req.query.section;
+  const c = +req.query.class || +req.query.grade;
+  const teacher = req.query.teacher;
+
+  let validClass = checkValidClass(c);
+  let validSection = checkValidSection(section);
+
+  if (c && !validClass) {
+    throw new Error("Class is not valid (class range is 1-10)");
+  }
+  if (section && !validSection) {
+    throw new Error("Section is not valid (sections range is A-D)");
+  }
+
+  //   let whereQuery = getWhereSectionOrClassQuerySnip(c, section);
+  let whereQuery = getWhereTeacherOrSectionOrClassQuerySnip(
+    teacher,
+    c,
+    section
+  );
+
   let query = `
         SELECT 
             c.grade_no as grade,
@@ -74,6 +101,7 @@ router.get("/", (req, res) => {
             ON c.osub2_teacher_id = ot2.id
         INNER JOIN teachers ot3
             ON c.osub3_teacher_id = ot3.id
+        ${whereQuery}
         -- Sorting
         ORDER BY
             c.grade_no,
@@ -94,6 +122,31 @@ router.get("/", (req, res) => {
 // ACCESS   Public
 router.get("/full", async (req, res) => {
   try {
+    const section = req.query.section;
+    const c = +req.query.class || +req.query.grade;
+    const teacher = req.query.teacher;
+    const student = req.query.student;
+    const subject = req.query.subject;
+
+    let validClass = checkValidClass(c);
+    let validSection = checkValidSection(section);
+
+    if (c && !validClass) {
+      throw new Error("Class is not valid (class range is 1-10)");
+    }
+    if (section && !validSection) {
+      throw new Error("Section is not valid (sections range is A-D)");
+    }
+
+    // TODO fix class search by student name
+    let whereQuery = getWhereAllSearchQuerySnip(
+      c,
+      section,
+      subject,
+      teacher,
+      student
+    );
+
     let query = `
         SELECT 
             c.grade_no as grade,
@@ -158,6 +211,9 @@ router.get("/full", async (req, res) => {
             ON c.osub2_teacher_id = ot2.id
         INNER JOIN teachers ot3
             ON c.osub3_teacher_id = ot3.id
+        INNER JOIN students s
+            ON s.class_id = c.id
+        ${whereQuery}
         -- Sorting
         ORDER BY
             c.grade_no,

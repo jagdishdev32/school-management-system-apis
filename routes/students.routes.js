@@ -13,7 +13,7 @@ const {
 router.get("/", async (req, res) => {
   try {
     const section = req.query.section;
-    const c = +req.query.class;
+    const c = +req.query.class || +req.query.grade;
 
     let validClass = checkValidClass(c);
     let validSection = checkValidSection(section);
@@ -80,7 +80,7 @@ router.get("/", async (req, res) => {
 router.get("/full", async (req, res) => {
   try {
     const section = req.query.section;
-    const c = +req.query.class;
+    const c = +req.query.class || +req.query.grade;
     const subject = req.query.subject;
 
     let validClass = checkValidClass(c);
