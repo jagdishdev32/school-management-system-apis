@@ -9,11 +9,13 @@ app.get("/", (req, res) => {
   return res.json({ message: "Hello from Express" });
 });
 
-const studentRoute = require("./routes/students.routes");
+const studentsRoute = require("./routes/students.routes");
 const classesRoute = require("./routes/classes.routes");
+const teachersRoute = require("./routes/teachers.routes");
 
-app.use("/students", studentRoute);
+app.use("/students", studentsRoute);
 app.use("/classes", classesRoute);
+app.use("/teachers", teachersRoute);
 
 const PORT = process.env.PORT || 5000;
 

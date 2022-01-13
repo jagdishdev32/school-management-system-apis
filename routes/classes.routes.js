@@ -138,7 +138,6 @@ router.get("/full", async (req, res) => {
       throw new Error("Section is not valid (sections range is A-D)");
     }
 
-    // TODO fix class search by student name
     let whereQuery = getWhereAllSearchQuerySnip(
       c,
       section,
@@ -242,8 +241,6 @@ router.get("/full", async (req, res) => {
       //   Adding names of all the student in perticular class
       data[i].students = currStudentsList;
     }
-    //   TODO add students for each class
-    //   console.log(data[98]);
     return res.json({ data });
   } catch (error) {
     return res.json({ error, message: error.message });

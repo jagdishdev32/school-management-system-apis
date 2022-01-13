@@ -17,6 +17,10 @@ const studentsSearchQuerySnip = (student) => {
 };
 
 const teacherSearchQuerySnip = (teacher) => {
+  ` (lower(t.teacher_name) LIKE Lower('%${teacher}%')) `;
+};
+
+const teachersSearchQuerySnip = (teacher) => {
   return ` 
             (
                 lower(t1.teacher_name) LIKE lower('%${teacher}%') OR 
@@ -86,7 +90,7 @@ const getWhereTeacherOrSectionOrClassQuerySnip = (teacher, clss, section) => {
 
   if (teacher) {
     // whereQuery += ` (os1.sub_name LIKE '%${teacher}%' OR os2.sub_name LIKE '%${subject}%' )`;
-    whereQuery += teacherSearchQuerySnip(teacher);
+    whereQuery += teachersSearchQuerySnip(teacher);
   }
 
   if (clss) {
@@ -133,7 +137,7 @@ const getWhereAllSearchQuerySnip = (
 
   if (teacher) {
     if (clss || section || subject) whereQuery += " AND ";
-    whereQuery += teacherSearchQuerySnip(teacher);
+    whereQuery += teachersSearchQuerySnip(teacher);
   }
 
   if (student) {
