@@ -6,10 +6,10 @@ const db = require("../db");
 //          sorted by class then section then name
 // ACCESS   Public
 router.get("/", (req, res) => {
-  query = `
+  let query = `
         SELECT 
           -- Student Detiails
-          c.grade_id as grade,
+          c.grade_no as grade,
           c.section as section,
           s.student_name as name
         FROM students s
@@ -17,10 +17,10 @@ router.get("/", (req, res) => {
         INNER JOIN classes c
           ON s.class_id = c.id
         INNER JOIN grades g
-          ON c.grade_id = g.id
+          ON c.grade_no = g.grade_no
         -- Sorting
         ORDER BY
-            c.grade_id,
+            c.grade_no,
             c.section,
             s.student_name
     `;
@@ -38,11 +38,11 @@ router.get("/", (req, res) => {
 //          sorted by class then section then name
 // ACCESS   Public
 router.get("/full", (req, res) => {
-  query = `
+  let query = `
         SELECT 
             -- Student Detiails
             s.student_name as name,
-            c.grade_id as grade,
+            c.grade_no as grade,
             c.section as section,
             -- Subjects
             s1.sub_name as subject_1,
@@ -58,7 +58,7 @@ router.get("/full", (req, res) => {
         INNER JOIN classes c
             ON s.class_id = c.id
         INNER JOIN grades g
-            ON c.grade_id = g.id
+            ON c.grade_no = g.grade_no
         -- Subjects Tables 
         INNER JOIN subs s1
             ON g.sub1_id = s1.id
@@ -77,14 +77,14 @@ router.get("/full", (req, res) => {
             ON g.osub2_id = os2.id
         -- Sorting
         ORDER BY
-            c.grade_id,
+            c.grade_no,
             c.section,
             s.student_name
     `;
   db.query(query)
     .then((response) => {
       let data = response.rows;
-      console.log(data[98]);
+      // console.log(data[98]);
       return res.json({ data });
     })
     .catch((error) => {

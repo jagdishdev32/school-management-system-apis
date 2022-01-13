@@ -1,14 +1,18 @@
 const router = require("express").Router();
 const db = require("../db");
+const {
+  getAllStudentsOfPerticularClassAndSection,
+  getOnlyStudentNamesListOfPerticularClassAndSection,
+} = require("../handlers");
 
 // METH     GET /classes
 // DESC     Get all classes with subjects and teachers details
 //          sorted by class then section
 // ACCESS   Public
 router.get("/", (req, res) => {
-  query = `
+  let query = `
         SELECT 
-            c.grade_id as grade,
+            c.grade_no as grade,
             c.section as section,
             -- Subjects
             s1.sub_name as subject_1,
@@ -33,7 +37,7 @@ router.get("/", (req, res) => {
         FROM classes c
         -- Joining tables
         INNER JOIN grades g
-            ON c.grade_id = g.id
+            ON c.grade_no = g.grade_no
         -- Subjects Tables 
         INNER JOIN subs s1
             ON g.sub1_id = s1.id
@@ -72,7 +76,7 @@ router.get("/", (req, res) => {
             ON c.osub3_teacher_id = ot3.id
         -- Sorting
         ORDER BY
-            c.grade_id,
+            c.grade_no,
             c.section
     `;
   db.query(query)
@@ -88,10 +92,11 @@ router.get("/", (req, res) => {
 // DESC     Get all classes with students, subjects and teachers
 //          sorted by class then section then student name
 // ACCESS   Public
-router.get("/full", (req, res) => {
-  query = `
+router.get("/full", async (req, res) => {
+  try {
+    let query = `
         SELECT 
-            c.grade_id as grade,
+            c.grade_no as grade,
             c.section as section,
             -- Subjects
             s1.sub_name as subject_1,
@@ -116,7 +121,7 @@ router.get("/full", (req, res) => {
         FROM classes c
         -- Joining tables
         INNER JOIN grades g
-            ON c.grade_id = g.id
+            ON c.grade_no = g.grade_no
         -- Subjects Tables 
         INNER JOIN subs s1
             ON g.sub1_id = s1.id
@@ -155,22 +160,38 @@ router.get("/full", (req, res) => {
             ON c.osub3_teacher_id = ot3.id
         -- Sorting
         ORDER BY
-            c.grade_id,
-            c.section,
-            s.student_name
-
+            c.grade_no,
+            c.section
     `;
-  db.query(query)
-    .then((response) => {
-      let data = response.rows;
-      //   TODO add students for each class
-      //   console.log(data[98]);
-      return res.json({ data });
-    })
-    .catch((error) => {
-      return res.json({ error, message: error.message });
-    });
-  //   return res.json({ message: "students here" });
+
+    const response = await db.query(query);
+
+    let data = response.rows;
+
+    for (let i = 0; i < data.length; i++) {
+      const currClass = data[i].grade;
+      const currSection = data[i].section;
+
+      const currStudentsList =
+        await getOnlyStudentNamesListOfPerticularClassAndSection(
+          currClass,
+          currSection
+        );
+
+      //   const currStudentsList = await getAllStudentsOfPerticularClassAndSection(
+      //     currClass,
+      //     currSection
+      //   );
+
+      //   Adding names of all the student in perticular class
+      data[i].students = currStudentsList;
+    }
+    //   TODO add students for each class
+    //   console.log(data[98]);
+    return res.json({ data });
+  } catch (error) {
+    return res.json({ error, message: error.message });
+  }
 });
 
 module.exports = router;

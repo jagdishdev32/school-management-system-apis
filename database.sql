@@ -3,7 +3,7 @@ DROP DATABASE IF EXISTS demodb;
 CREATE DATABASE demodb;
 
 -- Use Demodb database
-\c demodb;
+-- \c demodb;
 
 -- Creating Tables
 
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS grades (
 CREATE TABLE IF NOT EXISTS classes (
     id SERIAL,
     section CHAR NOT NULL DEFAULT 'A',
-    grade_id INT NOT NULL,
+    grade_no INT NOT NULL,
     -- Teachers ID's
     sub1_teacher_id INT NOT NULL,
     sub2_teacher_id INT NOT NULL,
@@ -74,7 +74,8 @@ CREATE TABLE IF NOT EXISTS classes (
     osub2_teacher_id INT NOT NULL,
     osub3_teacher_id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (grade_id) REFERENCES grades(id),
+    -- Perviously was using grade_id which was useless
+    FOREIGN KEY (grade_no) REFERENCES grades(grade_no),
     FOREIGN KEY (sub1_teacher_id) REFERENCES teachers(id),
     FOREIGN KEY (sub2_teacher_id) REFERENCES teachers(id),
     FOREIGN KEY (sub3_teacher_id) REFERENCES teachers(id),
@@ -159,49 +160,49 @@ insert into grades (grade_no, sub1_id, sub2_id, sub3_id, sub4_id, sub5_id, osub1
 -- Demo Classes (Each grade has 4 sections i.e A, B, C, D)
 
 -- A section
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (1, 'A', 2, 3, 4, 5, 6, 7, 8, 9);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (2, 'A', 3, 4, 5, 6, 7, 8, 9, 10);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (3, 'A', 4, 5, 6, 7, 8, 9, 10, 1);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (4, 'A', 5, 6, 7, 8, 9, 10, 1, 2);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (5, 'A', 6, 7, 8, 9, 10, 1, 2, 3);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (6, 'A', 7, 8, 9, 10, 1, 2, 3, 4);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (7, 'A', 8, 9, 10, 1, 2, 3, 4, 5);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (8, 'A', 9, 10, 1, 2, 3, 4, 5, 6);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (9, 'A', 10, 1, 2, 3, 4, 5, 6, 7);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (10,'A',  1, 2, 3, 4, 5, 6, 7, 8);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (1, 'A', 2, 3, 4, 5, 6, 7, 8, 9);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (2, 'A', 3, 4, 5, 6, 7, 8, 9, 10);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (3, 'A', 4, 5, 6, 7, 8, 9, 10, 1);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (4, 'A', 5, 6, 7, 8, 9, 10, 1, 2);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (5, 'A', 6, 7, 8, 9, 10, 1, 2, 3);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (6, 'A', 7, 8, 9, 10, 1, 2, 3, 4);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (7, 'A', 8, 9, 10, 1, 2, 3, 4, 5);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (8, 'A', 9, 10, 1, 2, 3, 4, 5, 6);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (9, 'A', 10, 1, 2, 3, 4, 5, 6, 7);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (10,'A',  1, 2, 3, 4, 5, 6, 7, 8);
 -- B section
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (1, 'B', 3, 4, 5, 6, 7, 8, 9, 10);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (2, 'B', 2, 3, 4, 5, 6, 7, 8, 9);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (3,'B',  1, 2, 3, 4, 5, 6, 7, 8);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (4, 'B', 4, 5, 6, 7, 8, 9, 10, 1);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (5, 'B', 5, 6, 7, 8, 9, 10, 1, 2);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (6, 'B', 6, 7, 8, 9, 10, 1, 2, 3);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (7, 'B', 7, 8, 9, 10, 1, 2, 3, 4);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (8, 'B', 8, 9, 10, 1, 2, 3, 4, 5);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (9, 'B', 9, 10, 1, 2, 3, 4, 5, 6);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (10, 'B', 10, 1, 2, 3, 4, 5, 6, 7);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (1, 'B', 3, 4, 5, 6, 7, 8, 9, 10);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (2, 'B', 2, 3, 4, 5, 6, 7, 8, 9);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (3,'B',  1, 2, 3, 4, 5, 6, 7, 8);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (4, 'B', 4, 5, 6, 7, 8, 9, 10, 1);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (5, 'B', 5, 6, 7, 8, 9, 10, 1, 2);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (6, 'B', 6, 7, 8, 9, 10, 1, 2, 3);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (7, 'B', 7, 8, 9, 10, 1, 2, 3, 4);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (8, 'B', 8, 9, 10, 1, 2, 3, 4, 5);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (9, 'B', 9, 10, 1, 2, 3, 4, 5, 6);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (10, 'B', 10, 1, 2, 3, 4, 5, 6, 7);
 -- C section
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (1,'C',  1, 2, 3, 4, 5, 6, 7, 8);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (2, 'C', 2, 3, 4, 5, 6, 7, 8, 9);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (3, 'C', 3, 4, 5, 6, 7, 8, 9, 10);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (4, 'C', 4, 5, 6, 7, 8, 9, 10, 1);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (5, 'C', 5, 6, 7, 8, 9, 10, 1, 2);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (6, 'C', 6, 7, 8, 9, 10, 1, 2, 3);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (7, 'C', 7, 8, 9, 10, 1, 2, 3, 4);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (8, 'C', 8, 9, 10, 1, 2, 3, 4, 5);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (9, 'C', 9, 10, 1, 2, 3, 4, 5, 6);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (10, 'C', 10, 1, 2, 3, 4, 5, 6, 7);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (1,'C',  1, 2, 3, 4, 5, 6, 7, 8);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (2, 'C', 2, 3, 4, 5, 6, 7, 8, 9);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (3, 'C', 3, 4, 5, 6, 7, 8, 9, 10);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (4, 'C', 4, 5, 6, 7, 8, 9, 10, 1);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (5, 'C', 5, 6, 7, 8, 9, 10, 1, 2);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (6, 'C', 6, 7, 8, 9, 10, 1, 2, 3);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (7, 'C', 7, 8, 9, 10, 1, 2, 3, 4);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (8, 'C', 8, 9, 10, 1, 2, 3, 4, 5);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (9, 'C', 9, 10, 1, 2, 3, 4, 5, 6);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (10, 'C', 10, 1, 2, 3, 4, 5, 6, 7);
 -- D section
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (1, 'D', 3, 4, 5, 6, 7, 8, 9, 10);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (2,'D',  1, 2, 3, 4, 5, 6, 7, 8);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (3, 'D', 4, 5, 6, 7, 8, 9, 10, 1);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (4, 'D', 6, 7, 8, 9, 10, 1, 2, 3);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (5, 'D', 5, 6, 7, 8, 9, 10, 1, 2);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (6, 'D', 7, 8, 9, 10, 1, 2, 3, 4);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (7, 'D', 10, 1, 2, 3, 4, 5, 6, 7);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (8, 'D', 9, 10, 1, 2, 3, 4, 5, 6);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (9, 'D', 2, 3, 4, 5, 6, 7, 8, 9);
-insert into classes (grade_id, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (10, 'D', 8, 9, 10, 1, 2, 3, 4, 5);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (1, 'D', 3, 4, 5, 6, 7, 8, 9, 10);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (2,'D',  1, 2, 3, 4, 5, 6, 7, 8);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (3, 'D', 4, 5, 6, 7, 8, 9, 10, 1);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (4, 'D', 6, 7, 8, 9, 10, 1, 2, 3);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (5, 'D', 5, 6, 7, 8, 9, 10, 1, 2);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (6, 'D', 7, 8, 9, 10, 1, 2, 3, 4);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (7, 'D', 10, 1, 2, 3, 4, 5, 6, 7);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (8, 'D', 9, 10, 1, 2, 3, 4, 5, 6);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (9, 'D', 2, 3, 4, 5, 6, 7, 8, 9);
+insert into classes (grade_no, section, sub1_teacher_id, sub2_teacher_id, sub3_teacher_id, sub4_teacher_id, sub5_teacher_id, osub1_teacher_id, osub2_teacher_id, osub3_teacher_id) values (10, 'D', 8, 9, 10, 1, 2, 3, 4, 5);
 
 -- Demo Students (25 students in each class)
 INSERT INTO students (student_name, class_id, osub1_id, osub2_id) VALUES ('Vonni Kermon', '1', '7', '8');
