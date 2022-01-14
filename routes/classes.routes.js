@@ -1,14 +1,19 @@
 const router = require("express").Router();
+
 const db = require("../db");
+
 const {
   getOnlyStudentNamesListOfPerticularClassAndSection,
   checkValidClass,
   checkValidSection,
 } = require("../handlers");
+
 const {
   getWhereSectionOrClassQuerySnip,
   getWhereTeacherOrSectionOrClassQuerySnip,
   getWhereAllSearchQuerySnip,
+  extractSubjectsIdsFromBody,
+  extractTeachersIdsFromBody,
 } = require("../helper");
 
 // METH     GET /classes
@@ -112,7 +117,7 @@ router.get("/", (req, res) => {
       return res.json({ data: response.rows });
     })
     .catch((error) => {
-      return res.json({ error, message: error.message });
+      return res.status(400).json({ error, message: error.message });
     });
 });
 
@@ -243,7 +248,21 @@ router.get("/full", async (req, res) => {
     }
     return res.json({ data });
   } catch (error) {
-    return res.json({ error, message: error.message });
+    return res.status(400).json({ error, message: error.message });
+  }
+});
+
+// METH     POST /classes
+// DESC     Create new class
+// ACCESS   Public
+router.post("/", async (req, res) => {
+  try {
+    //   body = {grade_no, section, subject1, subject2, ..., optional_subject1, ...,  optional_subject3
+    //              subject1_teacher, ..., subject5_teacher, optional_subject1_teacher, ..., optional_subject3_teacher }
+    const clss = await createClass({ ...req.body });
+    return res.status(201).json({ message: "class created", clss });
+  } catch (error) {
+    return res.status(400).json({ error, message: error.message });
   }
 });
 

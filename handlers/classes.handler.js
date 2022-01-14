@@ -1,6 +1,7 @@
 const { checkValidSection, checkValidClass } = require("./inputChecker");
 const db = require("../db");
 const { getWhereTeacherOrSectionOrClassQuerySnip } = require("../helper");
+const { createGrade } = require("./grades.handlers");
 
 const getClassesObjFromId = async (class_id) => {
   try {
@@ -16,6 +17,54 @@ const getClassesObjFromId = async (class_id) => {
     return data;
   } catch (error) {
     return error;
+  }
+};
+
+const createClass = async (obj) => {
+  try {
+    const { grade_no, section } = obj.grade;
+
+    //   Subjects
+    const [s1, s2, s3, s4, s5, os1, os2, os3] =
+      await extractSubjectsIdsFromBody(obj);
+    //   Teachers
+
+    let gradeResponse = await createGrade(
+      grade_no,
+      s1,
+      s2,
+      s3,
+      s4,
+      s5,
+      os1,
+      os2,
+      os3
+    );
+    let gradeObj = gradeResponse.rows[0];
+    // TODO remove log
+    console.log("created grade from createClass function, ", gradeObj);
+
+    const tecIds = await extractTeachersIdsFromBody(obj);
+
+    let query = `INSERT INTO classes (grade_no, section, sub1_id, sub2_id, sub3_id, sub4_id, sub5_id, osub1_is, osub2_id, osub3_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`;
+    let values = [
+      obj.grade_no,
+      obj.section,
+      tecIds[0],
+      tecIds[1],
+      tecIds[2],
+      tecIds[3],
+      tecIds[4],
+      tecIds[5],
+      tecIds[6],
+    ];
+
+    const data = await db.query(query, values);
+
+    const clss = data.rows[0];
+    return clss;
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -183,4 +232,5 @@ module.exports = {
   getGradeNoFromClassId,
   getSectionFromClassId,
   getClassIdFromGradeAndSection,
+  createClass,
 };

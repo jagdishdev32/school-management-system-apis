@@ -1,9 +1,16 @@
 const router = require("express").Router();
 const db = require("../db");
-const { checkValidClass, checkValidSection } = require("../handlers");
+const {
+  checkValidClass,
+  checkValidSection,
+  getClassIdFromGradeAndSection,
+  createStudent,
+  deleteStudentWithId,
+} = require("../handlers");
 const {
   getWhereSectionOrClassQuerySnip,
   getWhereSubjectOrSectionOrClassQuerySnip,
+  getWhereAllSearchQuerySnip,
 } = require("../helper");
 
 // METH     GET /students
@@ -69,7 +76,7 @@ router.get("/", async (req, res) => {
 
     return res.json({ data });
   } catch (error) {
-    return res.json({ error, message: error.message });
+    return res.status(400).json({ error, message: error.message });
   }
 });
 
@@ -80,6 +87,7 @@ router.get("/", async (req, res) => {
 router.get("/full", async (req, res) => {
   try {
     const section = req.query.section;
+    const student_name = req.query.student;
     const c = +req.query.class || +req.query.grade;
     const subject = req.query.subject;
 
@@ -95,10 +103,18 @@ router.get("/full", async (req, res) => {
     }
 
     // let whereQuery = getWhereSectionOrClassQuerySnip(c, section);
-    let whereQuery = getWhereSubjectOrSectionOrClassQuerySnip(
-      subject,
+    // let whereQuery = getWhereSubjectOrSectionOrClassQuerySnip(
+    //   subject,
+    //   c,
+    //   section
+    // );
+
+    let whereQuery = getWhereAllSearchQuerySnip(
       c,
-      section
+      section,
+      subject,
+      undefined,
+      student_name
     );
 
     let query = `
@@ -151,7 +167,48 @@ router.get("/full", async (req, res) => {
 
     return res.json({ data });
   } catch (error) {
-    return res.json({ error, message: error.message });
+    return res.status(400).json({ error, message: error.message });
+  }
+});
+
+router.post("/", async (req, res) => {
+  try {
+    const {
+      student_name,
+      grade_no,
+      section,
+      optional_subject_1,
+      optional_subject_2,
+    } = req.body;
+
+    const student = await createStudent(
+      student_name,
+      grade_no,
+      section,
+      optional_subject_1,
+      optional_subject_2
+    );
+
+    return res.status(201).json({ message: "Student Created", student });
+  } catch (error) {
+    return res.status(400).json({ error, message: error.message });
+  }
+});
+
+// TODO add edit student api
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const student = await deleteStudentWithId(id);
+
+    if (student.length < 1) {
+      throw new Error("Invalid Id");
+    }
+
+    return res.json({ message: "Student Deleted", student });
+  } catch (error) {
+    return res.status(400).json({ error, message: error.message });
   }
 });
 

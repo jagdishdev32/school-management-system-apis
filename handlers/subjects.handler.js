@@ -1,4 +1,6 @@
-const { checkId } = require("./inputChecker");
+const { checkId, checkValidName } = require("./inputChecker");
+
+const db = require("../db");
 
 const getSubjectNameFromId = async (subject_id) => {
   try {
@@ -19,12 +21,16 @@ const getSubjectNameFromId = async (subject_id) => {
 
 const getSubjectIdFromSubjectName = async (subject_name) => {
   try {
-    //   TODO add name validator
-    // const valid = checkName(subject_name);
+    const isId = checkId(subject_name);
+    if (isId) {
+      return subject_name;
+    }
 
-    // if (!valid) {
-    //   throw new Error("Id is not valid");
-    // }
+    const valid = checkValidName(subject_name);
+
+    if (!valid) {
+      throw new Error("Subject Name is not valid");
+    }
 
     let query = `select id from subs WHERE lower(sub_name) = lower('${subject_name}')`;
     let response = await db.query(query);
@@ -35,7 +41,56 @@ const getSubjectIdFromSubjectName = async (subject_name) => {
   }
 };
 
+const createSubject = async (subject_name) => {
+  try {
+    let query = `INSERT INTO subs (sub_name) VALUES ('${subject_name}') RETURNING *`;
+    let response = await db.query(query);
+    let data = response.rows[0];
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const updateSubject = async (id, subject_name) => {
+  try {
+    let query = `UPDATE subs set subs_name = '${subject_name}' WHERE id = '${id}' RETURNING *`;
+    let response = await db.query(query);
+    let data = response.rows[0];
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteSubjectWithName = async (subject_name) => {
+  try {
+    let query = `DELETE FROM subs WHERE sub_name = '${subject_name}' RETURNING *`;
+    let response = await db.query(query);
+    const data = response.rows[0];
+    return data;
+    return;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteSubjectWithId = async (id) => {
+  try {
+    let query = `DELETE FROM subs WHERE id = '${id}' RETURNING *`;
+    let response = await db.query(query);
+    const data = response.rows[0];
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   getSubjectNameFromId,
   getSubjectIdFromSubjectName,
+  createSubject,
+  updateSubject,
+  deleteSubjectWithId,
+  deleteSubjectWithName,
 };

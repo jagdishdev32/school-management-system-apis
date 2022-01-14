@@ -3,6 +3,7 @@ const {
   checkInt,
   checkValidClass,
   checkValidSection,
+  checkValidName,
 } = require("./inputChecker");
 
 const {
@@ -13,6 +14,8 @@ const {
   getStudentNameFromId,
   getStudentObjFromId,
   getStudentIdFromStudentNameAndClassId,
+  createStudent,
+  deleteStudentWithId,
 } = require("./students.handlers");
 
 const {
@@ -24,6 +27,10 @@ const {
   getTeacherObjFromId,
   getTeacherNameFromId,
   getTeacherIdFromTeacherName,
+  createTeacher,
+  deleteTeacherWithName,
+  deleteTeacherWithId,
+  updateTeacher,
 } = require("./teachers.handlers");
 
 const {
@@ -32,9 +39,26 @@ const {
   getGradeNoFromClassId,
   getClassesObjFromId,
   getClassIdFromGradeAndSection,
+  createClass,
 } = require("./classes.handler");
 
 const { name_fixer } = require("./other");
+
+const {
+  getSubjectIdFromSubjectName,
+  getSubjectNameFromId,
+  createSubject,
+  deleteSubjectWithId,
+  updateSubject,
+  deleteSubjectWithName,
+} = require("./subjects.handler");
+
+const {
+  createGrade,
+  checkGradeSupportOptionalSubjects,
+  checkGradeSupportOptionalSubject,
+  deleteGrade,
+} = require("./grades.handlers");
 
 module.exports = {
   // Checker file functions
@@ -42,6 +66,7 @@ module.exports = {
   checkInt,
   checkValidClass,
   checkValidSection,
+  checkValidName,
   //   Student Functions
   getAllStudents,
   getAllStudentsOfPerticularClass,
@@ -50,6 +75,8 @@ module.exports = {
   getStudentObjFromId,
   getStudentNameFromId,
   getStudentIdFromStudentNameAndClassId,
+  createStudent,
+  deleteStudentWithId,
   // Teachers Functions
   getAllTeachers,
   getAllTeachersName,
@@ -59,12 +86,29 @@ module.exports = {
   getTeacherObjFromId,
   getTeacherNameFromId,
   getTeacherIdFromTeacherName,
+  createTeacher,
+  deleteTeacherWithId,
+  deleteTeacherWithName,
+  updateTeacher,
   // Classes Functions
   getAllClassesWithSubjectsAndTeachers,
   getClassesObjFromId,
   getGradeNoFromClassId,
   getSectionFromClassId,
   getClassIdFromGradeAndSection,
+  createClass,
+  // Subjects Functions
+  getSubjectIdFromSubjectName,
+  getSubjectNameFromId,
+  createSubject,
+  updateSubject,
+  deleteSubjectWithName,
+  deleteTeacherWithId,
+  // Grades Functions
+  createGrade,
+  deleteGrade,
+  checkGradeSupportOptionalSubject,
+  checkGradeSupportOptionalSubjects,
   // Other
   name_fixer,
 };

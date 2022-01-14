@@ -1,6 +1,6 @@
 const { name_fixer } = require("./other");
 const db = require("../db");
-const { checkId } = require("./inputChecker");
+const { checkId, checkValidName } = require("./inputChecker");
 
 const getAllTeachers = async () => {
   try {
@@ -10,6 +10,51 @@ const getAllTeachers = async () => {
     return data;
   } catch (error) {
     return error;
+  }
+};
+
+const createTeacher = async (teacher_name) => {
+  try {
+    let query = `INSERT INTO teachers (teacher_name) VALUES ('${teacher_name}') RETURNING *`;
+    let response = await db.query(query);
+    let data = response.rows[0];
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const updateTeacher = async (id, teacher_name) => {
+  try {
+    let query = `UPDATE teachers set teacher_name = '${teacher_name}' WHERE id = '${id}' RETURNING *`;
+    let response = await db.query(query);
+    let data = response.rows;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteTeacherWithName = async (teacher_name) => {
+  try {
+    let query = `DELETE FROM teachers WHERE teacher_name = '${teacher_name}' RETURNING *`;
+    let response = await db.query(query);
+    const data = response.rows;
+    return data;
+    return;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteTeacherWithId = async (id) => {
+  try {
+    let query = `DELETE FROM teachers WHERE id = '${id}' RETURNING *`;
+    let response = await db.query(query);
+    const data = response.rows;
+    return data;
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -49,12 +94,11 @@ const getTeacherNameFromId = async (teacher_id) => {
 
 const getTeacherIdFromTeacherName = async (teacher_name) => {
   try {
-    // TODO add name validator
-    // const valid = checkName(teacher_id);
+    const valid = checkValidName(teacher_id);
 
-    // if (!valid) {
-    //   throw new Error("teacher_name is not valid");
-    // }
+    if (!valid) {
+      throw new Error("teacher_name is not valid");
+    }
 
     let query = `select id from teachers WHERE lower(teacher_name) = lower('${teacher_id})'`;
     let response = await db.query(query);
@@ -198,4 +242,8 @@ module.exports = {
   getTeacherObjFromId,
   getTeacherNameFromId,
   getTeacherIdFromTeacherName,
+  createTeacher,
+  deleteTeacherWithName,
+  deleteTeacherWithId,
+  updateTeacher,
 };

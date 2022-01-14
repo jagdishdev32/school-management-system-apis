@@ -26,9 +26,22 @@ const checkValidSection = (section) => {
   return false;
 };
 
+const checkValidName = (name) => {
+  const badCorrectors = ["/", ";", "(", ")", "|", '"', "'"];
+  badCorrectors.map((badcorr) => {
+    // If include any bad corrector return not valid name
+    if (name.includes(badcorr)) {
+      return false;
+    }
+  });
+
+  return true;
+};
+
 module.exports = {
   checkId,
   checkInt,
   checkValidClass,
   checkValidSection,
+  checkValidName,
 };

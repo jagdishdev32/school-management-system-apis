@@ -1,0 +1,32 @@
+### Get All Students with class and section 
+GET http://localhost:5000/students/ HTTP/1.1
+
+### Get All Students for perticular section or class 
+GET http://localhost:5000/students/ 
+    ?class=3
+    &section=A
+
+### Get All Students with all subjects 
+GET http://localhost:5000/students/full HTTP/1.1
+
+### Get perticular Students with perticular subject or class and section 
+GET http://localhost:5000/students/full 
+    ?subject=Math
+    &class=3
+    &section=A
+    &student=hello
+
+### Create Student
+POST http://localhost:5000/students/ HTTP/1.1
+content-type: application/json
+
+{
+    "student_name": "hello world",
+    "grade_no": 3,
+    "section": "A",
+    "optional_subject_1": "Mathematics",
+    "optional_subject_2": "LOGIC"
+}
+
+### Delete Student
+DELETE http://localhost:5000/students/1001 HTTP/1.1
