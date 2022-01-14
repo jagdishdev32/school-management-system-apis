@@ -2,6 +2,79 @@ const { checkValidSection, checkValidClass } = require("./inputChecker");
 const db = require("../db");
 const { getWhereTeacherOrSectionOrClassQuerySnip } = require("../helper");
 
+const getClassesObjFromId = async (class_id) => {
+  try {
+    const valid = checkId(class_id);
+
+    if (!valid) {
+      throw new Error("Id is not valid");
+    }
+
+    let query = `select * from classes WHERE id = '${class_id}'`;
+    let response = await db.query(query);
+    let data = response.rows[0];
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getSectionFromClassId = async (class_id) => {
+  try {
+    const valid = checkId(class_id);
+
+    if (!valid) {
+      throw new Error("Id is not valid");
+    }
+
+    let query = `select section from classes WHERE id = '${class_id}'`;
+    let response = await db.query(query);
+    let data = response.rows[0].section;
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getGradeNoFromClassId = async (class_id) => {
+  try {
+    const valid = checkId(class_id);
+
+    if (!valid) {
+      throw new Error("Id is not valid");
+    }
+
+    let query = `select grade_no from classes WHERE id = '${class_id}'`;
+    let response = await db.query(query);
+    let data = response.rows[0].grade_no;
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getClassIdFromGradeAndSection = async (grade, section) => {
+  try {
+    const validGrade = checkValidClass(grade);
+    const validSection = checkValidSection(section);
+
+    if (!validGrade) {
+      throw new Error("Grade No is not valid");
+    }
+
+    if (!validSection) {
+      throw new Error("Section is not valid");
+    }
+
+    let query = `select id from classes WHERE grade_no = '${grade}' AND section = '${section}'`;
+    let response = await db.query(query);
+    let data = response.rows[0].id;
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
 const getAllClassesWithSubjectsAndTeachers = async (
   c,
   section,
@@ -106,4 +179,8 @@ const getAllClassesWithSubjectsAndTeachers = async (
 
 module.exports = {
   getAllClassesWithSubjectsAndTeachers,
+  getClassesObjFromId,
+  getGradeNoFromClassId,
+  getSectionFromClassId,
+  getClassIdFromGradeAndSection,
 };

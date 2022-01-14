@@ -17,6 +17,66 @@ const getAllStudents = async () => {
   }
 };
 
+const getStudentObjFromId = async (student_id) => {
+  try {
+    const valid = checkId(student_id);
+
+    if (!valid) {
+      throw new Error("Id is not valid");
+    }
+
+    let query = `select * from students WHERE id = '${student_id}'`;
+    let response = await db.query(query);
+    let data = response.rows[0];
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getStudentIdFromStudentNameAndClassId = async (
+  student_name,
+  class_id
+) => {
+  try {
+    // TODO add name validator
+    // const validStudentName = checkName(student_name);
+    const validClassId = checkValidClass(class_id);
+
+    // if (!validStudentName) {
+    //   throw new Error("Student Name is not valid");
+    // }
+
+    if (!validClassId) {
+      throw new Error("Student Id is not valid");
+    }
+
+    let query = `select id from students WHERE lower(student_name) = lower('${student_name}') AND class_id = '${class_id}'`;
+    let response = await db.query(query);
+    let data = response.rows[0].id;
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getStudentNameFromId = async (student_id) => {
+  try {
+    const valid = checkId(student_id);
+
+    if (!valid) {
+      throw new Error("Id is not valid");
+    }
+
+    let query = `select student_name from students WHERE id = '${student_id}'`;
+    let response = await db.query(query);
+    let data = response.rows[0].student_name;
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
 const getAllStudentsOfPerticularClass = async (c) => {
   try {
     let valid = checkValidClass(c);
@@ -113,4 +173,7 @@ module.exports = {
   getAllStudentsOfPerticularClass,
   getAllStudentsOfPerticularClassAndSection,
   getOnlyStudentNamesListOfPerticularClassAndSection,
+  getStudentNameFromId,
+  getStudentObjFromId,
+  getStudentIdFromStudentNameAndClassId,
 };

@@ -1,11 +1,64 @@
 const { name_fixer } = require("./other");
 const db = require("../db");
+const { checkId } = require("./inputChecker");
 
 const getAllTeachers = async () => {
   try {
     let query = `SELECT * FROM teachers ORDER BY teacher_name`;
     let response = await db.query(query);
     let data = response.rows;
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getTeacherObjFromId = async (teacher_id) => {
+  try {
+    const valid = checkId(teacher_id);
+
+    if (!valid) {
+      throw new Error("Id is not valid");
+    }
+
+    let query = `select * from teachers WHERE id = '${teacher_id}'`;
+    let response = await db.query(query);
+    let data = response.rows[0];
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getTeacherNameFromId = async (teacher_id) => {
+  try {
+    const valid = checkId(teacher_id);
+
+    if (!valid) {
+      throw new Error("Id is not valid");
+    }
+
+    let query = `select teacher_name from teachers WHERE id = '${teacher_id}'`;
+    let response = await db.query(query);
+    let data = response.rows[0].teacher_name;
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getTeacherIdFromTeacherName = async (teacher_name) => {
+  try {
+    // TODO add name validator
+    // const valid = checkName(teacher_id);
+
+    // if (!valid) {
+    //   throw new Error("teacher_name is not valid");
+    // }
+
+    let query = `select id from teachers WHERE lower(teacher_name) = lower('${teacher_id})'`;
+    let response = await db.query(query);
+    let data = response.rows[0].id;
     return data;
   } catch (error) {
     return error;
@@ -142,4 +195,7 @@ module.exports = {
   getTeachersNameListFromTeachersObjs,
   getTeacherNameFromTeacherObj,
   convertClassesObjsIntoTeachersWithSubsObjs,
+  getTeacherObjFromId,
+  getTeacherNameFromId,
+  getTeacherIdFromTeacherName,
 };
