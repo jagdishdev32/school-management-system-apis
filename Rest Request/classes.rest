@@ -1,0 +1,292 @@
+##### Get All classes with subjects and teachers
+GET http://localhost:5000/classes/ HTTP/1.1
+
+### RETURNED OBJECT
+###
+### {
+###   "data": [
+###     {
+###       "grade": 1,
+###       "section": "A",
+###       "subject_1": "Handwriting",
+###       "subject_2": "Music",
+###       "subject_3": "Handwriting",
+###       "subject_4": "Physical Education",
+###       "subject_5": "Ecology",
+###       "optional_subject_1": "Economics",
+###       "optional_subject_2": "Instrumental Music",
+###       "optional_subject_3": "Mathematics",
+###       "sub1_teacher": "Maxwell Dallas",
+###       "sub2_teacher": "Julianna Shelton",
+###       "sub3_teacher": "Luna Skinner",
+###       "sub4_teacher": "Erick Wilton",
+###       "sub5_teacher": "William Bradshaw",
+###       "optional_sub1_teacher": "Jack Jones",
+###       "optional_sub2_teacher": "Tania Watt",
+###       "optional_sub3_teacher": "Candice Richards"
+###     },
+###     {
+###  
+
+
+##### Get perticular classes with subjects and teachers
+GET http://localhost:5000/classes/ 
+    ?class=3
+    &section=A
+
+### RETURNED OBJECT
+###
+### {
+###   "data": [
+###     {
+###       "grade": 3,
+###       "section": "A",
+###       "subject_1": "Handwriting",
+###       "subject_2": "Physical Education",
+###       "subject_3": "Ecology",
+###       "subject_4": "Economics",
+###       "subject_5": "Instrumental Music",
+###       "optional_subject_1": "Mathematics",
+###       "optional_subject_2": "LOGIC",
+###       "optional_subject_3": "Earth Science",
+###       "sub1_teacher": "Luna Skinner",
+###       "sub2_teacher": "Erick Wilton",
+###       "sub3_teacher": "William Bradshaw",
+###       "sub4_teacher": "Jack Jones",
+###       "sub5_teacher": "Tania Watt",
+###       "optional_sub1_teacher": "Candice Richards",
+###       "optional_sub2_teacher": "Matt Rainford",
+###       "optional_sub3_teacher": "Estrella Price"
+###     }
+###   ]
+### }
+
+##### Get All classes with all students list
+GET http://localhost:5000/classes/full HTTP/1.1
+
+### RETURNED OBJECT
+###
+### {
+###   "data": [
+###     {
+###       "grade": 1,
+###       "section": "A",
+###       "subject_1": "Handwriting",
+###       "subject_2": "Music",
+###       "subject_3": "Handwriting",
+###       "subject_4": "Physical Education",
+###       "subject_5": "Ecology",
+###       "optional_subject_1": "Economics",
+###       "optional_subject_2": "Instrumental Music",
+###       "optional_subject_3": "Mathematics",
+###       "sub1_teacher": "Maxwell Dallas",
+###       "sub2_teacher": "Julianna Shelton",
+###       "sub3_teacher": "Luna Skinner",
+###       "sub4_teacher": "Erick Wilton",
+###       "sub5_teacher": "William Bradshaw",
+###       "optional_sub1_teacher": "Jack Jones",
+###       "optional_sub2_teacher": "Tania Watt",
+###       "optional_sub3_teacher": "Candice Richards",
+###       "students": [
+###         "Barbee O Hogertie",
+###         "Bartolomeo Oehm",
+###         "Caitrin Lummasana",
+###         "Chase Sarson",
+###         "Chastity Mundow",
+###         ...
+###     },
+###
+
+### Get perticular classes with perticular class and section 
+GET http://localhost:5000/classes/full
+    ?subject=Math
+    &class=3
+    &section=A
+    &teacher=luna skin
+
+### RETURNED OBJECT
+###
+### {
+###   "data": [
+###     {
+###       "grade": 3,
+###       "section": "A",
+###       "subject_1": "Handwriting",
+###       "subject_2": "Physical Education",
+###       "subject_3": "Ecology",
+###       "subject_4": "Economics",
+###       "subject_5": "Instrumental Music",
+###       "optional_subject_1": "Mathematics",
+###       "optional_subject_2": "LOGIC",
+###       "optional_subject_3": "Earth Science",
+###       "sub1_teacher": "Luna Skinner",
+###       "sub2_teacher": "Erick Wilton",
+###       "sub3_teacher": "William Bradshaw",
+###       "sub4_teacher": "Jack Jones",
+###       "sub5_teacher": "Tania Watt",
+###       "optional_sub1_teacher": "Candice Richards",
+###       "optional_sub2_teacher": "Matt Rainford",
+###       "optional_sub3_teacher": "Estrella Price",
+###       "students": [
+###         "Ame Burleigh",
+###         "Anatola Garmanson",
+###         "Bartholemy Penke",
+###         "Beatriz Lerego",
+###         "Brandtr Axton",
+###         "Cedric Durban",
+###         "Dane Hardinge",
+###         "Duff Crocombe",
+###         "Edeline Blatcher",
+###         "Emory Lansdowne",
+###         "Felicle Monkeman",
+###         "Garrott Baldetti",
+###         "Grazia Quilleash",
+###         "hello world",
+###         "hello world",
+###         "Kenn Lebrun",
+###         "Livy Durant",
+###         "Loraine Pawsey",
+###         "Mufi Hallihan",
+###         "Sabine Rotter",
+###         "Shantee Adnet",
+###         "Sheila-kathryn MacPadene",
+###         "Suki Reisin",
+###         "Tatiania Hammett",
+###         "Tristan Domingues",
+###         "Zabrina Rumbelow",
+###         "Zacharias Cabrera"
+###       ]
+###     }
+###   ]
+### }
+
+##### Create New Class with Id's or Names everthing works
+### if grade is already exists then it doesn't need subjects ids or names
+### above line simple meaning creating section of grade doesn't require subjects
+POST http://localhost:5000/classes/ HTTP/1.1
+content-type: application/json
+
+{
+    "grade_no": 11,
+    "section": "A",
+    "subject1": 1,
+    "subject2": "Shares Investment",
+    "subject3": "Games",
+    "subject4": 4,
+    "subject5": 5,
+    "optional_subject1": 1,
+    "optional_subject2": 2,
+    "optional_subject3": 3,
+    "subject1_teacher": 1,
+    "subject2_teacher": "Harshit Mehta",
+    "subject3_teacher": "Jagdish Dev",
+    "subject4_teacher": 4,
+    "subject5_teacher": 5,
+    "optional_subject1_teacher": 1,
+    "optional_subject2_teacher": 2,
+    "optional_subject3_teacher": 3
+}
+
+### RETURNED OBJECT
+###
+### {
+###   "message": "class created",
+###   "class": {
+###     "id": 41,
+###     "section": "A",
+###     "grade_no": 11,
+###     "sub1_teacher_id": 1,
+###     "sub2_teacher_id": 11,
+###     "sub3_teacher_id": 12,
+###     "sub4_teacher_id": 4,
+###     "sub5_teacher_id": 5,
+###     "osub1_teacher_id": 1,
+###     "osub2_teacher_id": 2,
+###     "osub3_teacher_id": 3,
+###     "sub1_id": 1,
+###     "sub2_id": 11,
+###     "sub3_id": 12,
+###     "sub4_id": 4,
+###     "sub5_id": 5,
+###     "osub1_id": 1,
+###     "osub2_id": 2,
+###     "osub3_id": 3,
+###     "subject1": "Earth Science",
+###     "subject2": "Shares Investment",
+###     "subject3": "Games",
+###     "subject4": "Handwriting",
+###     "subject5": "Physical Education",
+###     "optional_subject1": "Earth Science",
+###     "optional_subject2": "Handwriting",
+###     "optional_subject3": "Music",
+###     "subject1_teacher": "Estrella Price",
+###     "subject2_teacher": "Harshit Mehta",
+###     "subject3_teacher": "Jagdish Dev",
+###     "subject4_teacher": "Luna Skinner",
+###     "subject5_teacher": "Erick Wilton",
+###     "optional_subject1_teacher": "Estrella Price",
+###     "optional_subject2_teacher": "Maxwell Dallas",
+###     "optional_subject3_teacher": "Julianna Shelton"
+###   }
+### }
+###
+
+##### Creating sections
+POST http://localhost:5000/classes/ HTTP/1.1
+content-type: application/json
+
+{
+    "grade_no": 11,
+    "section": "B",
+    "subject1_teacher": 1,
+    "subject2_teacher": "Ketan Parek",
+    "subject3_teacher": "Jagdish Dev",
+    "subject4_teacher": 4,
+    "subject5_teacher": "new teacher here",
+    "optional_subject1_teacher": 1,
+    "optional_subject2_teacher": 2,
+    "optional_subject3_teacher": 3
+}
+
+### RETURNED OBJECT
+###
+### {
+###   "message": "class created",
+###   "class": {
+###     "id": 42,
+###     "section": "B",
+###     "grade_no": 11,
+###     "sub1_teacher_id": 1,
+###     "sub2_teacher_id": 13,
+###     "sub3_teacher_id": 12,
+###     "sub4_teacher_id": 4,
+###     "sub5_teacher_id": 14,
+###     "osub1_teacher_id": 1,
+###     "osub2_teacher_id": 2,
+###     "osub3_teacher_id": 3,
+###     "sub1_id": 1,
+###     "sub2_id": 11,
+###     "sub3_id": 12,
+###     "sub4_id": 4,
+###     "sub5_id": 5,
+###     "osub1_id": 1,
+###     "osub2_id": 2,
+###     "osub3_id": 3,
+###     "subject1": "Earth Science",
+###     "subject2": "Shares Investment",
+###     "subject3": "Games",
+###     "subject4": "Handwriting",
+###     "subject5": "Physical Education",
+###     "optional_subject1": "Earth Science",
+###     "optional_subject2": "Handwriting",
+###     "optional_subject3": "Music",
+###     "subject1_teacher": "Estrella Price",
+###     "subject2_teacher": "Ketan Parek",
+###     "subject3_teacher": "Jagdish Dev",
+###     "subject4_teacher": "Luna Skinner",
+###     "subject5_teacher": "new teacher here",
+###     "optional_subject1_teacher": "Estrella Price",
+###     "optional_subject2_teacher": "Maxwell Dallas",
+###     "optional_subject3_teacher": "Julianna Shelton"
+###   }
+### }

@@ -16,6 +16,8 @@ const {
   getStudentIdFromStudentNameAndClassId,
   createStudent,
   deleteStudentWithId,
+  deleteAllStudentsWithClassId,
+  deleteStudentsWithGradeAndSection,
 } = require("./students.handlers");
 
 const {
@@ -23,14 +25,15 @@ const {
   getTeacherNameFromTeacherObj,
   getTeachersNameListFromTeachersObjs,
   getAllTeachersName,
-  convertClassesObjsIntoTeachersWithSubsObjs,
   getTeacherObjFromId,
   getTeacherNameFromId,
   getTeacherIdFromTeacherName,
+  getTeacherObjFromTeacherName,
   createTeacher,
   deleteTeacherWithName,
   deleteTeacherWithId,
   updateTeacher,
+  convertClassesObjsIntoTeachersWithSubsObjs,
 } = require("./teachers.handlers");
 
 const {
@@ -39,13 +42,16 @@ const {
   getGradeNoFromClassId,
   getClassesObjFromId,
   getClassIdFromGradeAndSection,
+  getClassObjFromGradeAndSection,
   createClass,
+  deleteClassWithClassId,
 } = require("./classes.handler");
 
 const { name_fixer } = require("./other");
 
 const {
   getSubjectIdFromSubjectName,
+  getSubjectObjFromSubjectName,
   getSubjectNameFromId,
   createSubject,
   deleteSubjectWithId,
@@ -54,10 +60,13 @@ const {
 } = require("./subjects.handler");
 
 const {
+  getGradeIdFromGradeNo,
+  getGradeObjFromGradeNo,
   createGrade,
+  deleteGradeWithGradeId,
+  deleteGradeWithGradeNo,
   checkGradeSupportOptionalSubjects,
   checkGradeSupportOptionalSubject,
-  deleteGrade,
 } = require("./grades.handlers");
 
 module.exports = {
@@ -77,38 +86,47 @@ module.exports = {
   getStudentIdFromStudentNameAndClassId,
   createStudent,
   deleteStudentWithId,
+  deleteStudentsWithGradeAndSection,
+  deleteAllStudentsWithClassId,
   // Teachers Functions
   getAllTeachers,
   getAllTeachersName,
   getTeachersNameListFromTeachersObjs,
   getTeacherNameFromTeacherObj,
-  convertClassesObjsIntoTeachersWithSubsObjs,
   getTeacherObjFromId,
   getTeacherNameFromId,
   getTeacherIdFromTeacherName,
+  getTeacherObjFromTeacherName,
   createTeacher,
   deleteTeacherWithId,
   deleteTeacherWithName,
   updateTeacher,
+  convertClassesObjsIntoTeachersWithSubsObjs,
   // Classes Functions
   getAllClassesWithSubjectsAndTeachers,
   getClassesObjFromId,
   getGradeNoFromClassId,
   getSectionFromClassId,
   getClassIdFromGradeAndSection,
+  getClassObjFromGradeAndSection,
   createClass,
+  deleteClassWithClassId,
   // Subjects Functions
   getSubjectIdFromSubjectName,
+  getSubjectObjFromSubjectName,
   getSubjectNameFromId,
   createSubject,
   updateSubject,
   deleteSubjectWithName,
-  deleteTeacherWithId,
+  deleteSubjectWithId,
   // Grades Functions
+  getGradeIdFromGradeNo,
+  getGradeObjFromGradeNo,
   createGrade,
-  deleteGrade,
   checkGradeSupportOptionalSubject,
   checkGradeSupportOptionalSubjects,
+  deleteGradeWithGradeNo,
+  deleteGradeWithGradeId,
   // Other
   name_fixer,
 };

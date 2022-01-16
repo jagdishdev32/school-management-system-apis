@@ -24,17 +24,6 @@ const getAllStudents = async () => {
   }
 };
 
-const deleteStudentWithId = async (id) => {
-  try {
-    let query = `DELETE FROM students WHERE id = '${id}' RETURNING *`;
-    let response = await db.query(query);
-    const data = response.rows;
-    return data;
-  } catch (error) {
-    throw error;
-  }
-};
-
 const getStudentObjFromId = async (student_id) => {
   try {
     const valid = checkId(student_id);
@@ -227,6 +216,44 @@ const createStudent = async (student_name, grade_no, section, osub1, osub2) => {
   }
 };
 
+const deleteStudentWithId = async (id) => {
+  try {
+    let query = `DELETE FROM students WHERE id = '${id}' RETURNING *`;
+    let response = await db.query(query);
+    const data = response.rows;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteAllStudentsWithClassId = async (class_id) => {
+  try {
+    const query = `DELETE FROM students WHERE class_id = '${class_id}' RETURNING *`;
+    const response = await db.query(query);
+    const deletedStudents = response.rows;
+    return deletedStudents;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteStudentsWithGradeAndSection = async (grade_no, section) => {
+  try {
+    const class_id = await getClassIdFromGradeAndSection(grade_no, section);
+    if (!class_id || class_id == "") {
+      throw new Error(
+        "Not valid class_id or grade_no or section for deleting students"
+      );
+    }
+
+    const deletedStudents = await deleteAllStudentsWithClassId(class_id);
+    return deletedStudents;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   getAllStudents,
   getAllStudentsOfPerticularClass,
@@ -237,4 +264,6 @@ module.exports = {
   getStudentIdFromStudentNameAndClassId,
   createStudent,
   deleteStudentWithId,
+  deleteAllStudentsWithClassId,
+  deleteStudentsWithGradeAndSection,
 };

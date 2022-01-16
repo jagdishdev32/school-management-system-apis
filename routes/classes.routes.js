@@ -6,6 +6,10 @@ const {
   getOnlyStudentNamesListOfPerticularClassAndSection,
   checkValidClass,
   checkValidSection,
+  createClass,
+  checkId,
+  getClassIdFromGradeAndSection,
+  getClassObjFromGradeAndSection,
 } = require("../handlers");
 
 const {
@@ -215,8 +219,6 @@ router.get("/full", async (req, res) => {
             ON c.osub2_teacher_id = ot2.id
         INNER JOIN teachers ot3
             ON c.osub3_teacher_id = ot3.id
-        INNER JOIN students s
-            ON s.class_id = c.id
         ${whereQuery}
         -- Sorting
         ORDER BY
@@ -259,8 +261,40 @@ router.post("/", async (req, res) => {
   try {
     //   body = {grade_no, section, subject1, subject2, ..., optional_subject1, ...,  optional_subject3
     //              subject1_teacher, ..., subject5_teacher, optional_subject1_teacher, ..., optional_subject3_teacher }
+
+    // If section is not given then by default section is 'A'
+    req.body.section = req.body.section || "A";
+
+    const { grade_no, section } = req.body;
+
+    const validGrade = checkValidClass(grade_no);
+    const validSection = checkValidSection(section);
+
+    if (!validGrade) {
+      throw new Error("Grade No is not valid");
+    }
+
+    if (!validSection) {
+      throw new Error("Section is not valid");
+    }
+
+    const alreadyExists = await getClassObjFromGradeAndSection(
+      grade_no,
+      section
+    );
+
+    // TODO remove log
+    console.log(alreadyExists, alreadyExists);
+
+    if (alreadyExists && alreadyExists.id) {
+      return res.status(400).json({
+        message: "class already exists with class_id: " + alreadyExists.id,
+        classObj: alreadyExists,
+      });
+    }
+
     const clss = await createClass({ ...req.body });
-    return res.status(201).json({ message: "class created", clss });
+    return res.status(201).json({ message: "class created", class: clss });
   } catch (error) {
     return res.status(400).json({ error, message: error.message });
   }

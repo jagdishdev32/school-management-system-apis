@@ -1,28 +1,34 @@
 const {
-  checkId,
-  getSubjectIdFromSubjectName,
-  getTeacherIdFromTeacherName,
-  createTeacher,
+  getSubjectObjFromSubjectName,
   createSubject,
-} = require("../handlers");
+} = require("../handlers/subjects.handler");
+const {
+  getTeacherObjFromTeacherName,
+  createTeacher,
+} = require("../handlers/teachers.handlers");
+const { checkId } = require("../handlers/inputChecker");
 
-const extractSubjectsIdsFromSubjectsList = async (subjectsNamesList) => {
+const extractSubjectsIdsFromSubjectsList = async (subjectsList) => {
   try {
     let subjectsIdsList = [];
 
     for (let i = 0; i < subjectsList.length; i++) {
       // here subject may represent id or name
       let subject = subjectsList[i];
+      let subjectName = subjectsList[i];
 
       let isId = checkId(subject);
+
       // Checking if id and not then get id of subject
       if (!isId) {
-        subject = await getSubjectIdFromSubjectName(subject);
+        subject = await getSubjectObjFromSubjectName(subject);
         // Checking if teacher exits
         if (!subject || subject == "") {
           // create subject returns id
-          let dataObj = await createSubject(subject);
+          let dataObj = await createSubject(subjectName);
           subject = dataObj.id;
+        } else {
+          subject = subject.id;
         }
       }
 
@@ -43,16 +49,19 @@ const extractTeachersIdsFromTeachersList = async (teachersList) => {
     for (let i = 0; i < teachersList.length; i++) {
       // here teacher may represent id or name
       let teacher = teachersList[i];
+      let teacherName = teachersList[i];
 
       let isId = checkId(teacher);
       // Checking if id and not then get id of teacher
       if (!isId) {
-        teacher = await getTeacherIdFromTeacherName(teacher);
+        teacher = await getTeacherObjFromTeacherName(teacher);
         // Checking if teacher exits
         if (!teacher || teacher == "") {
           // create teacher returns id
-          let dataObj = await createTeacher(teacher);
+          let dataObj = await createTeacher(teacherName);
           teacher = dataObj.id;
+        } else {
+          teacher = teacher.id;
         }
       }
 

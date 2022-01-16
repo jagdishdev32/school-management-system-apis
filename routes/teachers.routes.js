@@ -24,7 +24,7 @@ const router = require("express").Router();
 // ACCESS   Public
 router.get("/", async (req, res) => {
   try {
-    const teachers = await getAllTeachersName();
+    const teachers = await getAllTeachers();
 
     return res.json({ teachers });
   } catch (error) {

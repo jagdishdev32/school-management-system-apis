@@ -1,0 +1,130 @@
+##### Get Teachers List (sorted name vice)
+GET http://localhost:5000/teachers/ HTTP/1.1
+
+### RETURNED OBJECT
+###
+### {
+###   "teachers": [
+###     {
+###       "id": 9,
+###       "teacher_name": "Candice Richards"
+###     },
+###     {
+###       "id": 5,
+###       "teacher_name": "Erick Wilton"
+###     },
+### 
+
+##### GET Teachers List with their subjects lists (sorted by class then section then name)
+GET http://localhost:5000/teachers/full
+
+### RETURNED OBJECT
+###
+### {
+###   "teachersObjs": {
+###     "Maxwell_Dallas": [
+###       "Handwriting",
+###       "Music",
+###       "Physical Education",
+###       "Earth Science",
+###       "LOGIC"
+###     ],
+
+
+##### GET Teacher Subjects List
+GET http://localhost:5000/teachers/full
+    ?teacher=max
+
+### RETURNED OBJECT
+###
+### {
+###   "teachersObjs": {
+###     "Maxwell_Dallas": [
+###       "Handwriting",
+###       "Music",
+###       "Physical Education",
+###       "Earth Science",
+###       "LOGIC"
+###     ]
+###   }
+### }
+
+##### GET Teachers List with subjects lists for perticular class or section
+GET http://localhost:5000/teachers/full
+    ?section=D
+    &class=10
+    &teacher=max
+
+### RETURNED OBJECT
+### 
+### {
+###   "teachersObjs": {
+###     "Maxwell_Dallas": [
+###       "Physical Education"
+###     ]
+###   }
+### }
+
+
+##### Add New Teacher
+POST http://localhost:5000/teachers/ HTTP/1.1
+content-type: application/json
+
+{
+    "teacher_name": "hello world"
+}
+
+### RETURNED OBJECT
+###
+### {
+###   "message": "Teacher Added",
+###   "teacherObj": {
+###     "id": 18,
+###     "teacher_name": "hello world"
+###   }
+### }
+
+###### Delete teacher with id
+DELETE http://localhost:5000/teachers/18 HTTP/1.1
+
+### RETURNED OBJECT
+###
+### {
+###   "message": "Teacher Deleted",
+###   "teacherObj": [
+###     {
+###       "id": 18,
+###       "teacher_name": "hello world"
+###     }
+###   ]
+### }
+
+### Delete teacher with name
+DELETE http://localhost:5000/teachers/ HTTP/1.1
+content-type: application/json
+
+{
+    "teacher_name": "hello world"
+}
+
+### RETURNED OBJECT
+###
+### {
+###   "message": "Teacher Deleted",
+###   "teacherObj": [
+###     {
+###       "id": 15,
+###       "teacher_name": "hello world"
+###     },
+###     {
+###       "id": 16,
+###       "teacher_name": "hello world"
+###     },
+###     {
+###       "id": 17,
+###       "teacher_name": "hello world"
+###     }
+###   ]
+### }
+
+

@@ -1,0 +1,129 @@
+##### Get All Students with class and section 
+GET http://localhost:5000/students/ HTTP/1.1
+
+### RETURNED OBJECT
+### {
+###    "data": [
+###      {
+###        "grade": 1,
+###        "section": "A",
+###        "name": "Barbee O Hogertie"
+###      },...
+###
+###
+
+##### Get All Students for perticular section or class 
+GET http://localhost:5000/students/ 
+    ?class=3
+    &section=A
+
+### RETURNED OBJECT
+###
+### {
+###  "data": [
+###    {
+###      "grade": 3,
+###      "section": "A",
+###      "name": "Ame Burleigh"
+###    },
+###    {
+###      "grade": 3,
+###      "section": "A",
+###      "name": "Anatola Garmanson"
+###    },
+###    {...
+
+##### Get All Students with all subjects 
+GET http://localhost:5000/students/full HTTP/1.1
+
+### RETURNED OBJECT
+###
+### {
+###  "data": [
+###    {
+###      "name": "Barbee O Hogertie",
+###      "grade": 1,
+###      "section": "A",
+###      "subject_1": "Handwriting",
+###      "subject_2": "Music",
+###      "subject_3": "Handwriting",
+###      "subject_4": "Physical Education",
+###      "subject_5": "Ecology",
+###      "optional_subject_1": "Economics",
+###      "optional_subject_2": "Instrumental Music"
+###    },
+###    {
+###
+
+##### Get perticular Students with perticular subject or class and section 
+# This objected is requested after creating it with POST req on /students
+GET http://localhost:5000/students/full 
+    ?subject=Math
+    &class=3
+    &section=A
+    &student=hello
+
+### RETURNED OBJECT
+###
+### {
+###   "data": [
+###     {
+###       "name": "hello world",
+###       "grade": 3,
+###       "section": "A",
+###       "subject_1": "Handwriting",
+###       "subject_2": "Physical Education",
+###       "subject_3": "Ecology",
+###       "subject_4": "Economics",
+###       "subject_5": "Instrumental Music",
+###       "optional_subject_1": "Mathematics",
+###       "optional_subject_2": "LOGIC"
+###     }
+###   ]
+### }
+###
+
+##### Create Student with Subjects (Make sure you enter correct osubject name as per grade/class)
+POST http://localhost:5000/students/ HTTP/1.1
+content-type: application/json
+
+{
+    "student_name": "hello world",
+    "grade_no": 3,
+    "section": "A",
+    "optional_subject_1": "Mathematics",
+    "optional_subject_2": "LOGIC"
+}
+
+### RETURNED OBJECT
+###
+### {
+###   "message": "Student Created",
+###   "student": {
+###     "id": 1004,
+###     "student_name": "hello world",
+###     "class_id": 3,
+###     "osub1_id": 9,
+###     "osub2_id": 10
+###   }
+### }
+###
+
+##### Delete Student
+DELETE http://localhost:5000/students/1002 HTTP/1.1
+
+### RETURNED OBJECT
+###
+### {
+###   "message": "Student Deleted",
+###   "student": [
+###     {
+###       "id": 1002,
+###       "student_name": "hello world",
+###       "class_id": 3,
+###       "osub1_id": 9,
+###       "osub2_id": 10
+###     }
+###   ]
+### }
+###

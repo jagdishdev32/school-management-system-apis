@@ -92,6 +92,17 @@ const getTeacherNameFromId = async (teacher_id) => {
   }
 };
 
+const getTeacherObjFromTeacherName = async (teacher_name) => {
+  try {
+    let query = `select * from teachers WHERE lower(teacher_name) = lower('${teacher_name}')`;
+    let response = await db.query(query);
+    let data = response.rows[0];
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getTeacherIdFromTeacherName = async (teacher_name) => {
   try {
     const valid = checkValidName(teacher_id);
@@ -100,12 +111,12 @@ const getTeacherIdFromTeacherName = async (teacher_name) => {
       throw new Error("teacher_name is not valid");
     }
 
-    let query = `select id from teachers WHERE lower(teacher_name) = lower('${teacher_id})'`;
+    let query = `select id from teachers WHERE lower(teacher_name) = lower('${teacher_name}')`;
     let response = await db.query(query);
     let data = response.rows[0].id;
     return data;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
@@ -238,12 +249,13 @@ module.exports = {
   getAllTeachersName,
   getTeachersNameListFromTeachersObjs,
   getTeacherNameFromTeacherObj,
-  convertClassesObjsIntoTeachersWithSubsObjs,
   getTeacherObjFromId,
   getTeacherNameFromId,
   getTeacherIdFromTeacherName,
+  getTeacherObjFromTeacherName,
   createTeacher,
   deleteTeacherWithName,
   deleteTeacherWithId,
   updateTeacher,
+  convertClassesObjsIntoTeachersWithSubsObjs,
 };

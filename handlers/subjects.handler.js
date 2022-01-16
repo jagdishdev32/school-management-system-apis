@@ -19,6 +19,23 @@ const getSubjectNameFromId = async (subject_id) => {
   }
 };
 
+const getSubjectObjFromSubjectName = async (subject_name) => {
+  try {
+    const valid = checkValidName(subject_name);
+
+    if (!valid) {
+      throw new Error("Subject Name is not valid");
+    }
+
+    let query = `select * from subs WHERE lower(sub_name) = lower('${subject_name}')`;
+    let response = await db.query(query);
+    let data = response.rows[0];
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
 const getSubjectIdFromSubjectName = async (subject_name) => {
   try {
     const isId = checkId(subject_name);
@@ -89,6 +106,7 @@ const deleteSubjectWithId = async (id) => {
 module.exports = {
   getSubjectNameFromId,
   getSubjectIdFromSubjectName,
+  getSubjectObjFromSubjectName,
   createSubject,
   updateSubject,
   deleteSubjectWithId,

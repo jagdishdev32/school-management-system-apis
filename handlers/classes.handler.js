@@ -1,7 +1,28 @@
-const { checkValidSection, checkValidClass } = require("./inputChecker");
+const {
+  checkValidSection,
+  checkValidClass,
+  checkId,
+} = require("./inputChecker");
+
 const db = require("../db");
-const { getWhereTeacherOrSectionOrClassQuerySnip } = require("../helper");
-const { createGrade } = require("./grades.handlers");
+
+const {
+  getWhereTeacherOrSectionOrClassQuerySnip,
+  extractSubjectsIdsFromBody,
+  extractTeachersIdsFromBody,
+} = require("../helper");
+
+const {
+  createGrade,
+  deleteGradeWithGradeNo,
+  getGradeObjFromGradeNo,
+} = require("./grades.handlers");
+
+const { deleteAllStudentsWithClassId } = require("./students.handlers");
+
+const { getSubjectNameFromId } = require("./subjects.handler");
+
+const { getTeacherNameFromId } = require("./teachers.handlers");
 
 const getClassesObjFromId = async (class_id) => {
   try {
@@ -17,54 +38,6 @@ const getClassesObjFromId = async (class_id) => {
     return data;
   } catch (error) {
     return error;
-  }
-};
-
-const createClass = async (obj) => {
-  try {
-    const { grade_no, section } = obj.grade;
-
-    //   Subjects
-    const [s1, s2, s3, s4, s5, os1, os2, os3] =
-      await extractSubjectsIdsFromBody(obj);
-    //   Teachers
-
-    let gradeResponse = await createGrade(
-      grade_no,
-      s1,
-      s2,
-      s3,
-      s4,
-      s5,
-      os1,
-      os2,
-      os3
-    );
-    let gradeObj = gradeResponse.rows[0];
-    // TODO remove log
-    console.log("created grade from createClass function, ", gradeObj);
-
-    const tecIds = await extractTeachersIdsFromBody(obj);
-
-    let query = `INSERT INTO classes (grade_no, section, sub1_id, sub2_id, sub3_id, sub4_id, sub5_id, osub1_is, osub2_id, osub3_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`;
-    let values = [
-      obj.grade_no,
-      obj.section,
-      tecIds[0],
-      tecIds[1],
-      tecIds[2],
-      tecIds[3],
-      tecIds[4],
-      tecIds[5],
-      tecIds[6],
-    ];
-
-    const data = await db.query(query, values);
-
-    const clss = data.rows[0];
-    return clss;
-  } catch (error) {
-    throw error;
   }
 };
 
@@ -102,6 +75,28 @@ const getGradeNoFromClassId = async (class_id) => {
   }
 };
 
+const getClassObjFromGradeAndSection = async (grade, section) => {
+  try {
+    const validGrade = checkValidClass(grade);
+    const validSection = checkValidSection(section);
+
+    if (!validGrade) {
+      throw new Error("Grade No is not valid");
+    }
+
+    if (!validSection) {
+      throw new Error("Section is not valid");
+    }
+
+    let query = `select * from classes WHERE grade_no = '${grade}' AND section = '${section}'`;
+    let response = await db.query(query);
+    let data = response.rows[0];
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getClassIdFromGradeAndSection = async (grade, section) => {
   try {
     const validGrade = checkValidClass(grade);
@@ -120,7 +115,7 @@ const getClassIdFromGradeAndSection = async (grade, section) => {
     let data = response.rows[0].id;
     return data;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
@@ -226,11 +221,179 @@ const getAllClassesWithSubjectsAndTeachers = async (
   }
 };
 
+const createSection = async (obj) => {
+  try {
+    const { grade_no, section } = obj;
+
+    const tecIds = await extractTeachersIdsFromBody(obj);
+
+    // // NOTE if in future need to change grade_no to grade_id then take grade_id from gradeObj
+
+    let query = `INSERT INTO classes (
+                    grade_no, 
+                    section, 
+                    sub1_teacher_id, 
+                    sub2_teacher_id, 
+                    sub3_teacher_id, 
+                    sub4_teacher_id, 
+                    sub5_teacher_id, 
+                    osub1_teacher_id, 
+                    osub2_teacher_id, 
+                    osub3_teacher_id
+                  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`;
+    let values = [
+      grade_no,
+      section,
+      tecIds[0],
+      tecIds[1],
+      tecIds[2],
+      tecIds[3],
+      tecIds[4],
+      tecIds[5],
+      tecIds[6],
+      tecIds[7],
+    ];
+
+    const response = await db.query(query, values);
+    const data = response.rows[0];
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const createClass = async (obj) => {
+  try {
+    const { grade_no, section } = obj;
+
+    // Create grade only if grade doesn't exists
+    let gradeObj = await getGradeObjFromGradeNo(grade_no);
+    if (!gradeObj) {
+      //   Subjects
+      const [s1, s2, s3, s4, s5, os1, os2, os3] =
+        await extractSubjectsIdsFromBody(obj);
+
+      // If already grade with grade_no already exists then console.log it and continue creating class
+      gradeObj = await createGrade(grade_no, s1, s2, s3, s4, s5, os1, os2, os3);
+    }
+
+    // // Creating section
+    // const tecIds = await extractTeachersIdsFromBody(obj);
+
+    // // NOTE if in future need to change grade_no to grade_id then take grade_id from gradeObj
+
+    // let query = `INSERT INTO classes (
+    //                 grade_no,
+    //                 section,
+    //                 sub1_teacher_id,
+    //                 sub2_teacher_id,
+    //                 sub3_teacher_id,
+    //                 sub4_teacher_id,
+    //                 sub5_teacher_id,
+    //                 osub1_teacher_id,
+    //                 osub2_teacher_id,
+    //                 osub3_teacher_id
+    //               ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`;
+    // let values = [
+    //   grade_no,
+    //   section,
+    //   tecIds[0],
+    //   tecIds[1],
+    //   tecIds[2],
+    //   tecIds[3],
+    //   tecIds[4],
+    //   tecIds[5],
+    //   tecIds[6],
+    //   tecIds[7],
+    // ];
+
+    // const data = await db.query(query, values);
+
+    let sectionObj = await createSection(obj);
+
+    // Adding Subjects Ids to section Obj
+    sectionObj.sub1_id = gradeObj.sub1_id;
+    sectionObj.sub2_id = gradeObj.sub2_id;
+    sectionObj.sub3_id = gradeObj.sub3_id;
+    sectionObj.sub4_id = gradeObj.sub4_id;
+    sectionObj.sub5_id = gradeObj.sub5_id;
+    sectionObj.osub1_id = gradeObj.osub1_id;
+    sectionObj.osub2_id = gradeObj.osub2_id;
+    sectionObj.osub3_id = gradeObj.osub3_id;
+
+    // Adding subjectsNames to section Obj
+    sectionObj.subject1 = await getSubjectNameFromId(gradeObj.sub1_id);
+    sectionObj.subject2 = await getSubjectNameFromId(gradeObj.sub2_id);
+    sectionObj.subject3 = await getSubjectNameFromId(gradeObj.sub3_id);
+    sectionObj.subject4 = await getSubjectNameFromId(gradeObj.sub4_id);
+    sectionObj.subject5 = await getSubjectNameFromId(gradeObj.sub5_id);
+    sectionObj.optional_subject1 = await getSubjectNameFromId(
+      gradeObj.osub1_id
+    );
+    sectionObj.optional_subject2 = await getSubjectNameFromId(
+      gradeObj.osub2_id
+    );
+    sectionObj.optional_subject3 = await getSubjectNameFromId(
+      gradeObj.osub3_id
+    );
+
+    // Adding Teachers Names to section Obj
+    sectionObj.subject1_teacher = await getTeacherNameFromId(
+      sectionObj.sub1_teacher_id
+    );
+    sectionObj.subject2_teacher = await getTeacherNameFromId(
+      sectionObj.sub2_teacher_id
+    );
+    sectionObj.subject3_teacher = await getTeacherNameFromId(
+      sectionObj.sub3_teacher_id
+    );
+    sectionObj.subject4_teacher = await getTeacherNameFromId(
+      sectionObj.sub4_teacher_id
+    );
+    sectionObj.subject5_teacher = await getTeacherNameFromId(
+      sectionObj.sub5_teacher_id
+    );
+    sectionObj.optional_subject1_teacher = await getTeacherNameFromId(
+      sectionObj.osub1_teacher_id
+    );
+    sectionObj.optional_subject2_teacher = await getTeacherNameFromId(
+      sectionObj.osub2_teacher_id
+    );
+    sectionObj.optional_subject3_teacher = await getTeacherNameFromId(
+      sectionObj.osub3_teacher_id
+    );
+
+    const clss = sectionObj;
+    return clss;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteClassWithClassId = async (class_id) => {
+  try {
+    // 1. Delete All Students
+    // 2. Delete Section from classes Table
+
+    const deletedStudents = await deleteAllStudentsWithClassId(class_id);
+
+    const query = `DELETE FROM classes WHERE id = '${class_id}' RETURNING *`;
+    const response = await db.query(query);
+    const data = response.rows[0];
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   getAllClassesWithSubjectsAndTeachers,
   getClassesObjFromId,
   getGradeNoFromClassId,
   getSectionFromClassId,
   getClassIdFromGradeAndSection,
+  getClassObjFromGradeAndSection,
   createClass,
+  deleteClassWithClassId,
 };

@@ -11,14 +11,16 @@ const checkId = (id) => {
 };
 
 const checkValidClass = (c) => {
-  if (checkInt(c) && c >= 1 && c <= 10) {
+  let minClass = 1;
+  let maxClass = 15;
+  if (checkInt(c) && c >= minClass && c <= maxClass) {
     return true;
   }
   return false;
 };
 
 const checkValidSection = (section) => {
-  const MAX_SECTION = process.env.MAX_SECTION || "D";
+  const MAX_SECTION = process.env.MAX_SECTION || "F";
   const MIN_SECTION = process.env.MIN_SECTION || "A";
   if (MIN_SECTION <= section && section <= MAX_SECTION) {
     return true;

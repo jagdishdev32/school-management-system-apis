@@ -21,4 +21,6 @@ module.exports = {
   // Extract Helpers
   extractSubjectsIdsFromBody,
   extractTeachersIdsFromBody,
+  extractSubjectsIdsFromSubjectsList,
+  extractTeachersIdsFromTeachersList,
 };

@@ -1,6 +1,5 @@
-DROP DATABASE IF EXISTS demodb;
-
-CREATE DATABASE demodb;
+-- DROP DATABASE IF EXISTS demodb;
+-- CREATE DATABASE demodb;
 
 -- Use Demodb database
 -- \c demodb;
